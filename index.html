@@ -36,7 +36,6 @@
       background-image: radial-gradient(rgba(14, 165, 233, 0.12) 1px, transparent 1px);
       background-size: 32px 32px;
     }
-    /* Scroll Animation (Fade & float gracefully on scroll up/down) */
     .scroll-animate {
       opacity: 0;
       transform: translateY(28px);
@@ -142,7 +141,7 @@
         <!-- Key Course Facts Cards (5-grid) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12 scroll-animate">
           
-          <!-- Fact 1: 교육기간 (구글 스프레드시트 연동 id="period-course-1" 적용됨) -->
+          <!-- Fact 1: 교육기간 (id="period-course-1" 반영 완료) -->
           <div class="bg-[#0b132b]/85 backdrop-blur-sm border border-slate-800 hover:border-cyan-500/40 transition-all rounded-2xl p-5 flex flex-col justify-between group shadow-lg shadow-black/30">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 font-medium mb-1">
@@ -150,7 +149,7 @@
                 <i data-lucide="calendar" class="w-4 h-4 text-cyan-400/80"></i>
               </div>
               <div id="period-course-1" class="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight">
-                로딩 중...
+                연동 중...
               </div>
             </div>
             <div class="text-xs text-cyan-400/90 mt-3 font-semibold">
@@ -1247,7 +1246,7 @@
     // Initialize Lucide icons
     lucide.createIcons();
 
-    // Google Sheets Integration for Course Period
+    // 스프레드시트 연동 설정 (새로 발급받은 URL 및 ID 적용)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyWDz7VdOOtNFhvdGSVIdPR1tmJXySCIZFEIhqLMPCFmPgs7SCUEjBB7xEP0Fu4XgONQ/exec";
     const SITE_ID = "ktcloud";
     const COURSE_ID = "course-1";
@@ -1257,7 +1256,6 @@
         let response = await fetch(SCRIPT_URL);
         let data = await response.json();
         
-        // 스프레드시트 데이터에서 site_id와 course_id가 일치하는 항목 검색
         let targetItem = data.find(item => item.site_id === SITE_ID && item.course_id === COURSE_ID);
         
         if (targetItem) {
@@ -1265,9 +1263,15 @@
           if (targetElement) {
             targetElement.innerText = targetItem.period;
           }
+        } else {
+          console.warn("일치하는 과정을 찾지 못했습니다.");
         }
       } catch (error) {
         console.error("교육 기간을 불러오는 데 실패했습니다:", error);
+        let targetElement = document.getElementById(`period-${COURSE_ID}`);
+        if (targetElement) {
+          targetElement.innerText = "기간 문의";
+        }
       }
     }
 
@@ -1312,7 +1316,6 @@
           if (entry.isIntersecting) {
             entry.target.classList.add('animated');
           } else {
-            // Reversible animation: disappears when scrolling away
             entry.target.classList.remove('animated');
           }
         });

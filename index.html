@@ -142,14 +142,14 @@
         <!-- Key Course Facts Cards (5-grid) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12 scroll-animate">
           
-          <!-- Fact 1: 교육기간 -->
+          <!-- Fact 1: 교육기간 (구글 스프레드시트 연동 id 적용) -->
           <div class="bg-[#0b132b]/85 backdrop-blur-sm border border-slate-800 hover:border-cyan-500/40 transition-all rounded-2xl p-5 flex flex-col justify-between group shadow-lg shadow-black/30">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 font-medium mb-1">
                 <span>교육기간</span>
                 <i data-lucide="calendar" class="w-4 h-4 text-cyan-400/80"></i>
               </div>
-              <div class="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight">
+              <div id="period-course-1" class="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight">
                 26.12.29 ~ 27.06.30
               </div>
             </div>
@@ -1246,6 +1246,31 @@
   <script>
     // Initialize Lucide icons
     lucide.createIcons();
+
+    // Google Sheets Integration for Course Period
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbze5DeYJ7PJ7E94PcZZ_0bPKgwQ2Cz0nd3eKmOQkhaPCST-KMemniYoneT-LJPpxYimBQ/exec";
+    const SITE_ID = "ktcloud";
+    const COURSE_ID = "course-1";
+
+    async function loadCoursePeriod() {
+      try {
+        let response = await fetch(SCRIPT_URL);
+        let data = await response.json();
+        
+        let targetItem = data.find(item => item.site_id === SITE_ID && item.course_id === COURSE_ID);
+        
+        if (targetItem) {
+          let targetElement = document.getElementById(`period-${COURSE_ID}`);
+          if (targetElement) {
+            targetElement.innerText = targetItem.period;
+          }
+        }
+      } catch (error) {
+        console.error("교육 기간을 불러오는 데 실패했습니다:", error);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadCoursePeriod);
 
     // Accordion functionality for Curriculum
     function toggleAccordion(id) {

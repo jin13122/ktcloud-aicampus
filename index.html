@@ -71,23 +71,50 @@
       border-color: rgba(2, 132, 199, 0.75);
       z-index: 10;
     }
+
+    /* 로고의 흰색(kt) 영역만 어두운 검정(#0f172a)으로 변환하는 필터 */
+    .kt-logo-dark {
+      filter: url(#kt-white-to-black);
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+  <!-- SVG Filter: 로고에서 흰색(kt) 픽셀만 검정색(#0f172a)으로 변환하고 빨강/파랑 색상은 유지 -->
+  <svg width="0" height="0" class="absolute pointer-events-none" aria-hidden="true">
+    <defs>
+      <filter id="kt-white-to-black" color-interpolation-filters="sRGB">
+        <!-- 1. 원본 RGB를 유지한 채 알파를 1로 고정 -->
+        <feComponentTransfer in="SourceGraphic" result="fullAlphaSource">
+          <feFuncA type="table" tableValues="1 1" />
+        </feComponentTransfer>
+        <!-- 2. R, G, B가 모두 높은 흰색 영역만 추출하여 검정색(#0f172a) 마스크 생성 -->
+        <feColorMatrix in="SourceGraphic" type="matrix"
+          values="0 0 0 0 0.06
+                  0 0 0 0 0.09
+                  0 0 0 0 0.16
+                  5 5 5 0 -13" result="whiteMask" />
+        <!-- 3. 흰색 영역만 검정색으로 덮어쓰기 (빨강/파랑 영역은 원본 유지) -->
+        <feComposite in="whiteMask" in2="fullAlphaSource" operator="over" result="mergedRGB" />
+        <!-- 4. 원본 이미지의 투명도(Alpha) 복원 -->
+        <feComposite in="mergedRGB" in2="SourceAlpha" operator="in" />
+      </filter>
+    </defs>
+  </svg>
 
   <!-- ================= TOP NAVIGATION ================= -->
   <header class="fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-200/80">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <div class="flex items-center justify-between h-16">
         
-        <!-- Brand Logo -->
-        <a href="#overview" class="flex items-center gap-2 hover-scale rounded-lg px-1 py-0.5">
-          <span class="px-2 py-0.5 rounded-md bg-sky-50 border border-sky-200 text-sky-700 text-xs font-extrabold tracking-tight">
-            KDT 국비지원
-          </span>
-          <span class="text-base sm:text-lg font-black tracking-tight text-slate-900">
-            kt cloud <span class="text-sky-600">AI CAMPUS</span>
-          </span>
+        <!-- Brand Logo (이미지 로고 적용 + 흰색 kt만 검정 변환) -->
+        <a href="#overview" class="flex items-center hover-scale rounded-lg py-1">
+          <img
+            src="https://postfiles.pstatic.net/MjAyNjExMTNfMTc3/MDAxNzk0NTM5OTkzNDcy.XsNypfn_069pEPY42EAO_g2cdim0AxB1KQ79y-uoNgUg.YWMV42mxODHdwXgpfIA7hUbHIGGi24l_yimcIhll1F0g.PNG/kt%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C_%EB%A1%9C%EA%B3%A0.png?type=w773"
+            alt="kt cloud 로고"
+            referrerpolicy="no-referrer"
+            class="h-7 sm:h-8 w-auto object-contain kt-logo-dark"
+          />
         </a>
 
         <!-- Desktop Nav -->
@@ -135,10 +162,18 @@
           </span>
         </div>
 
-        <!-- Main Headline -->
+        <!-- Main Headline (대괄호 제거 + 글자 크기에 맞춘 검정 kt 로고 적용) -->
         <div class="scroll-animate">
           <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-[1.65] sm:leading-[1.7] mb-7">
-            <span class="block text-slate-800 mb-3.5 sm:mb-6">[kt cloud AI CAMPUS]</span>
+            <span class="flex flex-wrap items-center gap-2.5 sm:gap-3.5 text-slate-800 mb-3.5 sm:mb-6">
+              <img
+                src="https://postfiles.pstatic.net/MjAyNjExMTNfMTc3/MDAxNzk0NTM5OTkzNDcy.XsNypfn_069pEPY42EAO_g2cdim0AxB1KQ79y-uoNgUg.YWMV42mxODHdwXgpfIA7hUbHIGGi24l_yimcIhll1F0g.PNG/kt%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C_%EB%A1%9C%EA%B3%A0.png?type=w773"
+                alt="kt cloud"
+                referrerpolicy="no-referrer"
+                class="h-[1.05em] w-auto object-contain kt-logo-dark -translate-y-[0.03em]"
+              />
+              <span>AI CAMPUS</span>
+            </span>
             <span class="block">
               <span class="bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 AI 데이터센터 인프라 엔지니어

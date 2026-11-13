@@ -142,7 +142,7 @@
         <!-- Key Course Facts Cards (5-grid) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12 scroll-animate">
           
-          <!-- Fact 1: 교육기간 (구글 스프레드시트 연동 id 적용) -->
+          <!-- Fact 1: 교육기간 (구글 스프레드시트 연동 id="period-course-1" 적용됨) -->
           <div class="bg-[#0b132b]/85 backdrop-blur-sm border border-slate-800 hover:border-cyan-500/40 transition-all rounded-2xl p-5 flex flex-col justify-between group shadow-lg shadow-black/30">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-400 font-medium mb-1">
@@ -150,7 +150,7 @@
                 <i data-lucide="calendar" class="w-4 h-4 text-cyan-400/80"></i>
               </div>
               <div id="period-course-1" class="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight">
-                26.12.29 ~ 27.06.30
+                로딩 중...
               </div>
             </div>
             <div class="text-xs text-cyan-400/90 mt-3 font-semibold">
@@ -1248,7 +1248,7 @@
     lucide.createIcons();
 
     // Google Sheets Integration for Course Period
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbqv0I-pbMxJRMFgwLVmhMe6XXP7XIqoXJyO6oTuf9VLh4f2r2wfhSfXhQPXj5QmbsZA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbze5DeYJ7PJ7E94PcZZ_0bPKgwQ2Cz0nd3eKmOQkhaPCST-KMemniYoneT-LJPpxYimBQ/exec";
     const SITE_ID = "ktcloud";
     const COURSE_ID = "course-1";
 
@@ -1257,6 +1257,7 @@
         let response = await fetch(SCRIPT_URL);
         let data = await response.json();
         
+        // 스프레드시트 데이터에서 site_id와 course_id가 일치하는 항목 검색
         let targetItem = data.find(item => item.site_id === SITE_ID && item.course_id === COURSE_ID);
         
         if (targetItem) {
